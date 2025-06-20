@@ -1,0 +1,21 @@
+name: Deploy and Configure CoreOS VM
+
+on: [push]
+
+jobs:
+  launch-and-configure:
+    name: 'Launch and Configure CoreOS VM'
+    uses: r3m8/github-actions-secureblue/.github/workflows/run-vm-coreos.yml@main
+    with:
+      vm-name: 'fcos'
+      vcpus: 3
+      memory-mb: 8192
+      disk-size-gb: 10
+      stream: 'stable'
+      vm-ip: '192.168.122.3'
+      post-install-commands: |
+        sudo rpm-ostree upgrade
+        sudo systemctl reboot
+    secrets:
+      ssh-public-key: ${{ secrets.VM_SSH_PUBLIC_KEY }}
+      ssh-private-key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
